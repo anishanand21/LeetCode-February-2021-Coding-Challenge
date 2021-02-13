@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        vector <vector <int>> moves = {{-1,-1}, {-1, 0}, {-1, 1}, {0, -1},{0, 1}, {1, -1}, {1, 0}, {1, 1}};
+        
+        int n = grid.size() - 1;
+        int m = grid[0].size() - 1;
+        queue <vector <int>> que;
+        
+        if(grid[0][0] || grid[n][m])
+            return -1;
+        
+        que.push({0, 0});
+        grid[0][0] = 1;
+        
+        while(!que.empty() && !grid[n][m]) { 
+            vector <int> top = que.front();
+            que.pop();
+            for(vector <int> move: moves) {
+                int x = top[0] + move[0], y = top[1] + move[1];
+                if(0 <= x && x <= n && 0 <= y && y <= m && grid[x][y] == 0){
+                    grid[x][y] = grid[top[0]][top[1]] + 1;   // mark visted and propagate the distance
+                    que.push({x, y});
+                }
+            }
+        }
+        return grid[n][m] == 0 ? -1 : grid[n][m];   // If the queue terminated without setting (n, m) to a value other than zero, it means it could never reach the end.
+    }
+};
